@@ -1,0 +1,6 @@
+CREATE TABLE IF NOT EXISTS orders (
+   id INTEGER PRIMARY KEY AUTOINCREMENT,
+   amount DOUBLE,
+   term VARCHAR(255),
+   created_at VARCHAR(255) NOT NULL
+);
