@@ -1,11 +1,8 @@
 package org.mfi
 
-import io.github.oshai.kotlinlogging.KotlinLogging
 import org.springframework.beans.factory.annotation.Value
-import org.springframework.boot.ApplicationRunner
 import org.springframework.stereotype.Service
 import java.net.URI
-import java.net.URL
 import java.net.http.HttpClient
 import java.net.http.HttpRequest
 import java.net.http.HttpResponse

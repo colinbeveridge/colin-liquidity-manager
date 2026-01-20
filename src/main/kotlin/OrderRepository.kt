@@ -1,8 +1,5 @@
 package org.mfi
 
-import jakarta.annotation.PostConstruct
-import org.springframework.context.ApplicationContext
-import org.springframework.context.annotation.Bean
 import org.springframework.jdbc.core.JdbcTemplate
 import org.springframework.jdbc.core.RowMapper
 import org.springframework.stereotype.Repository

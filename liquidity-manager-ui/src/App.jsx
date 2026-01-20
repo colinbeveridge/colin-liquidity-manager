@@ -47,8 +47,6 @@ const LiquidityManagerApp = () => {
     const chartData = {
       labels: data.maturities,
       datasets: [{
-        // xAxis: "Term",
-        // yAxis: "%APY",
         label: '%APY',
         data: data.rates,
         borderColor: '#3b82f6',
@@ -134,7 +132,7 @@ const LiquidityManagerApp = () => {
 
   const handleSubmit = async () => {
     if (!formData.term || !formData.amount) {
-      alert('Please fill in all fields');
+      alert('Order requires a term and an amount');
       return;
     }
     setSubmitting(true);
@@ -187,13 +185,27 @@ const LiquidityManagerApp = () => {
                 <label>
                   Term
                 </label>
-                <input
-                    type="text"
+                <select
                     name="term"
                     value={formData.term}
                     onChange={handleInputChange}
-                    placeholder="Maturity to Order"
-                />
+                >
+                  <option value="">Maturity to Order</option>
+                  <option value="1M">1M</option>
+                  <option value="1.5M">1.5M</option>
+                  <option value="2M">2M</option>
+                  <option value="3M">3M</option>
+                  <option value="4M">4M</option>
+                  <option value="6M">6M</option>
+                  <option value="1Y">1Y</option>
+                  <option value="2Y">2Y</option>
+                  <option value="3Y">3Y</option>
+                  <option value="5Y">5Y</option>
+                  <option value="7Y">7Y</option>
+                  <option value="10Y">10Y</option>
+                  <option value="20Y">20Y</option>
+                  <option value="30Y">30Y</option>
+                </select>
               </div>
               <div>
                 <label>
@@ -219,7 +231,7 @@ const LiquidityManagerApp = () => {
             <h3>Historical Orders</h3>
             <ul>
               {orders.map((order, index) => (
-                <li key={`${order.term}-${order.time}-${index}`}>
+                  <li key={`${order.term}-${order.time}-${index}`}>
                   <strong>{order.term}</strong> — $
                   {order.amount.toFixed(2)} —{' '}
                   {formatDate(order.time)}
