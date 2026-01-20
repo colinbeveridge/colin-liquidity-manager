@@ -1,6 +1,6 @@
 Run Instructions for Liquidity Manager
 
-1. In order to run the project, you will need to run on macOS or Linux
+1. In order to run the project, you will need to run on macOS or Linux. Start a new terminal window.
 2. Install sdkman: `curl -s "https://get.sdkman.io" | bash`
    1. Source new path: `source "$HOME/.sdkman/bin/sdkman-init.sh"`
    2. Install Java 21 Corretto: `sdk install java 21.0.9-amzn`
