@@ -20,11 +20,7 @@ open class OrderRepository(
         )
     }
 
-    /**
-     * Insert a new order and return the created row
-     */
     open fun create(order: Order) {
-        println("Updating with Order: $order")
         jdbc.update(
             """
             INSERT INTO orders (amount, term, created_at)
@@ -36,9 +32,6 @@ open class OrderRepository(
         )
     }
 
-    /**
-     * Fetch all orders
-     */
     open fun findAll(): List<Order> {
         return jdbc.query(
             """

@@ -15,7 +15,6 @@ class YieldController(
     val log = KotlinLogging.logger {}
     @GetMapping
     fun getYields(): ResponseEntity<YieldCurve> {
-        log.info { "Received request for yields"  }
         return ResponseEntity(yieldService.getYields(), HttpStatus.OK)
     }
 }

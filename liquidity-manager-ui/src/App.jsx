@@ -1,14 +1,14 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import {
-  Chart as ChartJS,
   CategoryScale,
-  LinearScale,
-  PointElement,
-  LineElement,
-  Title,
-  Tooltip,
+  Chart as ChartJS,
+  Filler,
   Legend,
-  Filler
+  LinearScale,
+  LineElement,
+  PointElement,
+  Title,
+  Tooltip
 } from 'chart.js/auto';
 
 ChartJS.register(
@@ -27,11 +27,9 @@ const LiquidityManagerApp = () => {
   const chartInstance = useRef(null);
 
   const fetchOrders = async () => {
-    console.log("Fetching orders")
   const response = await fetch('http://localhost:8080/orders');
 
   if (!response.ok) {
-    console.log("fetch order response was not ok: ", response.status)
     throw new Error(await response.text());
   }
 
@@ -42,7 +40,6 @@ const LiquidityManagerApp = () => {
     const response = await fetch('http://localhost:8080/yields');
 
     if (!response.ok) {
-      console.log("fetch order response was not ok: ", response.status)
       throw new Error(await response.text());
     }
 
@@ -50,11 +47,13 @@ const LiquidityManagerApp = () => {
     const chartData = {
       labels: data.maturities,
       datasets: [{
-        label: 'Yield (APY)',
+        // xAxis: "Term",
+        // yAxis: "%APY",
+        label: '%APY',
         data: data.rates,
         borderColor: '#3b82f6',
         backgroundColor: 'rgba(59, 130, 246, 0.1)',
-        tension: 0.4,
+        tension: 0.0,
         fill: true
       }]
   };
@@ -62,18 +61,9 @@ const LiquidityManagerApp = () => {
   setChartData(chartData);
   };
 
-// const formatDate = (isoString) => {
-//   console.log("formatting date")
-
-//   if (isoString == null) return null
-
-//   console.log(isoString)
-//   // console.log(isoString.slice(0,19) + 'Z')
-//   newDate = Date.parse("2026-01-19") //.toLocaleDateString()
-//   console.log(newDate)
-//   return newDate
-// };
-
+  const formatDate = (isoString) => {
+    return new Date(isoString).toLocaleString()
+  };
 
   const [orders, setOrders] = useState([]);
 
@@ -86,10 +76,6 @@ const LiquidityManagerApp = () => {
   const [chartData, setChartData] = useState({})
 
   const [submitting, setSubmitting] = useState(false);
-
-  // Chart data based on orders
-
-
 
   useEffect(() => {
   fetchOrders();
@@ -161,18 +147,13 @@ const LiquidityManagerApp = () => {
         },
         body: JSON.stringify(formData)
       });
-      console.log(response)
 
       if (!response.ok){
-        console.log("ok was ", response.ok)
-        console.log("Response was not ok: ", response.status)
           const errorText = await response.text();
           console.log("Error: ", errorText)
           throw new Error(`HTTP ${response.status}: ${errorText}`);
       }
-      else {
-        console.log("Success!")
-      }
+
       setFormData({ term: '', amount: '' });
       fetchOrders()
     } catch (error) {
@@ -184,68 +165,56 @@ const LiquidityManagerApp = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 p-8">
-      <div className="max-w-7xl mx-auto">
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900">
+    <div>
+      <div>
+          <h1>
             Liquidity Manager
           </h1>
-        </div>
-
-        {/* Chart Section */}
-        <div className="bg-white rounded-lg shadow-md p-6 mb-8">
-          <h2 className="text-xl font-semibold mb-4">
+        <div>
+          <h2>
             Today's Yield Curve
           </h2>
-          <div className="h-80">
+          <div>
             <canvas ref={chartRef}></canvas>
           </div>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-          {/* Order Form */}
-          <div className="bg-white rounded-lg shadow-md p-6">
-            <h2 className="text-xl font-semibold mb-4">Submit New Order</h2>
-            <div className="space-y-4">
+        <div>
+          <div>
+            <h2>Submit New Order</h2>
+            <div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label>
                   Term
                 </label>
                 <input
-                  type="text"
-                  name="term"
-                  value={formData.term}
-                  onChange={handleInputChange}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  placeholder="Maturity to Order"
+                    type="text"
+                    name="term"
+                    value={formData.term}
+                    onChange={handleInputChange}
+                    placeholder="Maturity to Order"
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label>
                   Amount ($)
                 </label>
                 <input
-                  type="number"
-                  name="amount"
-                  value={formData.amount}
-                  onChange={handleInputChange}
-                  min="0"
-                  step="0.01"
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  placeholder="Amount to Order"
+                    type="number"
+                    name="amount"
+                    value={formData.amount}
+                    onChange={handleInputChange}
+                    min="0"
+                    step="100.00"
+                    placeholder="Amount to Order"
                 />
               </div>
-              <button
-                onClick={handleSubmit}
-                disabled={submitting}
-                className="w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 disabled:bg-blue-300 transition-colors"
-              >
+              <button onClick={handleSubmit} disabled={submitting}>
                 {submitting ? 'Submitting...' : 'Submit Order'}
               </button>
             </div>
           </div>
 
-          {/* Order History */}
           <section>
             <h3>Historical Orders</h3>
             <ul>
@@ -253,13 +222,11 @@ const LiquidityManagerApp = () => {
                 <li key={`${order.term}-${order.time}-${index}`}>
                   <strong>{order.term}</strong> — $
                   {order.amount.toFixed(2)} —{' '}
-                  {order.time}
+                  {formatDate(order.time)}
                 </li>
               ))}
             </ul>
           </section>
-
-
         </div>
       </div>
     </div>
